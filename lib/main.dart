@@ -30,7 +30,20 @@ class _MyImageListViewState extends State<MyImageListView> {
     // Add more image paths
   ];
 
-  List<bool> _isSelected = List.generate(4, (index) => index == 0);
+  late List<bool> _isSelected;
+
+  @override
+  void initState() {
+    super.initState();
+    _isSelected = List.generate(images.length, (index) => index == 0);
+
+    _pageController.addListener(() {
+      setState(() {
+        _currentIndex = _pageController.page!.round();
+        _isSelected = List.generate(images.length, (i) => i == _currentIndex);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +54,10 @@ class _MyImageListViewState extends State<MyImageListView> {
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 8, // 80% of the available space
+            flex: 8,
             child: PageView.builder(
               controller: _pageController,
-              scrollDirection:
-                  Axis.horizontal, // Set scroll direction to horizontal
+              scrollDirection: Axis.horizontal,
               itemCount: images.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -55,9 +67,7 @@ class _MyImageListViewState extends State<MyImageListView> {
                     // For example: Navigator.push(...)
                   },
                   child: Container(
-                    width: MediaQuery.of(context)
-                        .size
-                        .width, // Occupy the full width
+                    width: MediaQuery.of(context).size.width,
                     height: double.infinity,
                     child: Image.asset(
                       images[index],
@@ -81,16 +91,11 @@ class _MyImageListViewState extends State<MyImageListView> {
                       duration: Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                     );
-
-                    setState(() {
-                      _isSelected =
-                          List.generate(images.length, (i) => i == index);
-                    });
                   },
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 30),
                     margin: EdgeInsets.symmetric(horizontal: 8.0),
-                    padding: EdgeInsets.all(5.0), // Add padding
+                    padding: EdgeInsets.all(5.0),
                     width: 50.0,
                     height: 50.0,
                     decoration: BoxDecoration(
@@ -99,7 +104,7 @@ class _MyImageListViewState extends State<MyImageListView> {
                         color: _isSelected[index]
                             ? Colors.blueAccent
                             : Colors.grey,
-                        width: 2.0, // Set border width
+                        width: 2.0,
                       ),
                       boxShadow: _isSelected[index]
                           ? [
@@ -119,15 +124,5 @@ class _MyImageListViewState extends State<MyImageListView> {
         ],
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(() {
-      setState(() {
-        _currentIndex = _pageController.page!.round();
-      });
-    });
   }
 }
