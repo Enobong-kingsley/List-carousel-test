@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:slider_test/dayno/screens/profile.dart';
 
 void main() {
   runApp(MyApp());
@@ -8,7 +9,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyImageListView(),
+      debugShowCheckedModeBanner: false,
+      home: ProfileScreen(),
     );
   }
 }
